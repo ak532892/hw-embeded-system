@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+		<meta charset="utf-8">
+		<title>Directions service</title>
+		<link rel="stylesheet" href="Lab06.css">
+		<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&signed_in=true&libraries=places"></script>
+		<script>
+			var image1 = "home.png";
+			var image2 = "tatung.png";
+			var directionsDisplay;
+			var directionsService = new google.maps.DirectionsService();
+			var map;
+			var markers = [];
+			var Home = new google.maps.LatLng(25.0102954, 121.5032468);
+			var Tatung = new google.maps.LatLng(25.067367, 121.521269);
+			var start = Home;
+			var end = Tatung;
+			var click = 0;
+			
+			function initialize() {
+			/*var rendererOptions = {
+				map: map,
+				color:"#FFFFFF"
+			}*/
+				directionsDisplay = new google.maps.DirectionsRenderer(/*rendererOptions*/);
+				var mapOptions = {
+					zoom: 17,
+					center: Home,
+					scaleControl: true
+				};
+				map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+				directionsDisplay.setMap(map);
+				calcRoute(Home, Tatung);
+				
+				var marker = new google.maps.Marker({
+					position: Home,
+					map: map,
+					icon: image1
+				});
+				var infowindow = new google.maps.InfoWindow({
+					content: 'My Home'
+				});
+				infowindow.open(map, marker);
+				
+				marker = new google.maps.Marker({
+					position: Tatung,
+					map: map,
+					icon: image2
+				});
+				infowindow = new google.maps.InfoWindow({
+					content: 'Tatung'
+				});
+				infowindow.open(map, marker);
+				
+				google.maps.event.addListener(map, 'click', Draw);
+			}
+			function Draw(event) {
+				var infowindow = new google.maps.InfoWindow({
+					content: 'Start'
+				});
+
+				if(click == 0){
+					start = event.latLng;
+					click = 1;
+					for (var i = 0; i < markers.length; i++) {
+						markers[i].setMap(null);
+					}
+					infowindow = new google.maps.InfoWindow({
+						content: 'Start'
+					});
+					placeMarker(start, map, infowindow);
+				}
+				else{
+					end = event.latLng;
+					click = 0;
+					infowindow = new google.maps.InfoWindow({
+						content: 'End'
+					});
+					placeMarker(end, map, infowindow);
+					calcRoute(start, end);
+				}
+			}
+			function placeMarker(position, map, infowindow) {
+				var marker = new google.maps.Marker({
+					position: position,
+					map: map
+				});
+				markers.push(marker);
+				infowindow.open(map, marker);
+			}
+			function calcRoute(start1, end1) {
+				start = start1;
+				end = end1;
+				var selectedMode = document.getElementById('mode').value;
+				var request = {
+					origin: start1,
+					destination: end1,
+					travelMode: google.maps.TravelMode[selectedMode]
+				};
+				directionsService.route(request, function(response, status) {
+					if (status == google.maps.DirectionsStatus.OK) {
+						directionsDisplay.setDirections(response);
+						var route = response.routes[0];
+						var summaryPanel = document.getElementById('directions_panel');
+						summaryPanel.innerHTML = route.legs[0].distance.text;
+					}
+				});
+			}
+			function MyHome(cent) {
+				map.setCenter(cent);
+			}
+			google.maps.event.addDomListener(window, 'load', initialize);
+		</script>
+	</head>
+	<body >
+		<div id="panel">
+			Start：<input type="text" id="start" type="text" class="controls" size="15" placeholder="Enter a location1"/>
+			End：<input type="text" id="end" type="text" class="controls" size="15" placeholder="Enter a location2"/>
+			<input type="submit" id="type-selector" value="Submit"
+			onclick="calcRoute(document.getElementById('start').value, document.getElementById('end').value)"/>
+			<input id="type-selector" onclick="MyHome(Home);" type=button value="My Home">
+			<input id="type-selector" onclick="MyHome(Tatung);" type=button value="Tatung">
+			<br />
+			Start：
+			<select id="start1" onchange="calcRoute(document.getElementById('start1').value, document.getElementById('end1').value);">
+				<option value="大同大學">大同大學</option>
+				<option value="中正紀念堂">中正紀念堂</option>
+				<option value="台北101">台北101</option> 
+				<option value="永平國小">永平國小</option>
+				<option value="25.0102954, 121.5032468">我家</option>
+			</select>
+			End：
+			<select id="end1" onchange="calcRoute(document.getElementById('start1').value, document.getElementById('end1').value);">
+				<option value="大同大學">大同大學</option>
+				<option value="中正紀念堂">中正紀念堂</option>
+				<option value="台北101">台北101</option>
+				<option value="永平國小">永平國小</option>
+				<option value="25.0102954, 121.5032468">我家</option>
+			</select>
+			交通方式:
+			<select id="mode" onchange="calcRoute(start, end);">
+				<option value="DRIVING">開車</option>
+				<option value="WALKING">步行</option>
+				<option value="BICYCLING">單車</option>
+				<option value="TRANSIT">大眾運輸</option>
+			</select>
+			<div id="directions_panel"></div>
+		</div>
+		<div id="map-canvas"></div>
+	</body>
+</html>
