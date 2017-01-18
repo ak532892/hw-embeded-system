@@ -1,4 +1,7 @@
-<h1>103-2-EmbeddedSystemExperimentProject</h1>
-<h2>Homework</h2>
+# hw-embeded-system
 
-Eclipse Android Experiments
+* Course - [Embeded System Project Laboratory 103-2](http://selquery.ttu.edu.tw/Main/syllabusview.php?SbjNo=I3090)
+* JAVA
+* Eclipse Android Experiments
+
+## Homework ##
