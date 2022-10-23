@@ -4,4 +4,20 @@
 * Java
 * Eclipse Android Experiments
 
-## Homework ##
+## Final Project ##
+Simple Map App
+
+## Demo ##
+
+* User Interface  
+![alt tag](https://i.imgur.com/ywhIDih.png)
+
+* Road Map from Tatung University to Zhongshan Elementary school  
+Input two location and click search result.  
+![alt tag](https://i.imgur.com/JDCkfkg.png)
+
+* Different modes of transportation  
+![alt tag](https://i.imgur.com/Km7MQIz.png)
+
+* Record different road maps  
+![alt tag](https://i.imgur.com/NM30Zfb.png)
